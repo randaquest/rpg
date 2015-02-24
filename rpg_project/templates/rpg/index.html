@@ -1,0 +1,9 @@
+{% extends 'rpg/base.html' %}
+
+{% if user.is_authenticated %}
+{% block title %}Hello {{ user.username }}!{% endblock %}
+{% endif %}
+
+{% block body_block %}
+    Nothing yet
+{% endblock %}
