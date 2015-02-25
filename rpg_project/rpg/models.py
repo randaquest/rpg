@@ -11,9 +11,17 @@ class UserProfile(models.Model):
     strength = models.IntegerField(default=10)
     dexterity = models.IntegerField(default=10)
     intelligence = models.IntegerField(default=10)
+    areaID = models.ForeignKey(Area)
     
     def __unicode__(self):
         return self.user.username
+
+class Area(models.Model):
+     areaID = models.AutoField(primary_key=True)
+     name = models.CharField(max_length=128)
+     picture = models.ImageField(upload_to='area_images', blank=True)
+     rarity = models.IntegerField(default=1)
+     
     
 
 class Monster(models.Model):
@@ -23,6 +31,8 @@ class Monster(models.Model):
     rarity = models.IntegerField(default=50)
     difficulty = models.IntegerField(default=1)
     boss = models.BooleanField(default=False)
+    baseXP = models.IntegerField(default=10)
+    areaID = models.ForeignKey(Area)
 
     def __unicode__(self):
                 return self.name
@@ -31,7 +41,6 @@ class Item(models.Model): # Abstract class defining common attributes of all ite
     itemID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128)
     picture = models.ImageField(upload_to='item_images', blank=True)
-    rarity = models.IntegerField(default=50)
 
     def __unicode__(self):
         return self.name
@@ -46,7 +55,14 @@ class Armor(Item):
 class Usable(Item):
     effect = models.IntegerField(default=0)
 
-class Inventory(models.Model):
+class ItemTables(models.Model):
     userID = models.ForeignKey(UserProfile)
     itemID = models.ForeignKey(Item)
+    amount = models.IntegerField(default=0)
+
+class DropTables(models.Model):
+    monsterID = models.ForeignKey(Monster)
+    itemID = models.ForeignKey(Item)
+    rarity = models.IntegerField(default=0)
+    
     
