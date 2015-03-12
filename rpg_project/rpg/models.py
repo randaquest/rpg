@@ -21,6 +21,7 @@ class Area(models.Model):
      name = models.CharField(max_length=128)
      picture = models.ImageField(upload_to='area_images', blank=True)
      rarity = models.IntegerField(default=1)
+     backstory = models.CharField(max_length=128)
      
     
 

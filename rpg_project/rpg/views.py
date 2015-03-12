@@ -5,10 +5,25 @@ from rpg.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from rpg import randomNum
 
 
 def index(request):
+    u = request.user
+    a = request.user.areaID
+    if request.method != 'POST':
+        area = Area.objects
+    contextDict = {'user picture' : u.picture, 'user level' : u.level, 'user str' : u.strength, 'user dex' u.dexterity, 'user int' u.intelligence,  }
+    
+    if request.method == 'POST':
+        if isEvent:
     return render(request, 'rpg/index.html')
+
+
+def battle(request):
+    contextDict = {}
+    if request.method == 'POST':
+        
 
 
 def register(request):
