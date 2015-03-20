@@ -5,25 +5,32 @@ from rpg.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core import exceptions
 from rpg import randomNum
 
 
-def index(request):
-    u = request.user
-    a = request.user.areaID
-    if request.method != 'POST':
-        area = Area.objects
-    contextDict = {'user picture' : u.picture, 'user level' : u.level, 'user str' : u.strength, 'user dex' u.dexterity, 'user int' u.intelligence,  }
+def game(request):
+    try:
+        u = request.user.userprofile
+    except exceptions.ObjectDoesNotExist:
+        u = request.user.objects.create(UserProfile)
+    a = u.areaID
+    area = Area.objects.filter(AreaID=a)
     
     if request.method == 'POST':
-        if isEvent:
+        area = Area.objects.filter(AreaID=randomNum.whichArea)
+
+
+
+    contextDict = { 'username' : u.username, 'user picture' : u.picture, 'user level' : u.level, 'user str' : u.strength,
+                    'user dex' : u.dexterity, 'user int' : u.intelligence, 'maxHP' : u.maxHP, 'currentHP' : u.currentHP,
+                    'area name' : area.name, 'area picture' : area.picture, 'area backstory' : area.backstory }
+    return render(request, 'rpg/game.html', contextDict)
+
+def index(request):
+
     return render(request, 'rpg/index.html')
 
-
-def battle(request):
-    contextDict = {}
-    if request.method == 'POST':
-        
 
 
 def register(request):
@@ -61,6 +68,7 @@ def register(request):
                 profile.picture = request.FILES['picture']
 
             # Now we save the UserProfile model instance.
+            
             profile.save()
 
             # Update our variable to tell the template registration was successful.

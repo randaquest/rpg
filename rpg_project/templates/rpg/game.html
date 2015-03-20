@@ -1,0 +1,26 @@
+{% extends 'rpg/base.html' %}
+
+
+{% block body_block %}
+  {% if user.is_authenticated %}
+<div> 
+<p> {{ area name }} </p>
+<p> {{ area picture }} </p>
+<p> {{ area backstory }} </p>
+</div>
+<div> 
+<p> {{ username }} </p> 
+ <p> {{ user picture }} </p> 
+ <p> {{ user level }} </p> 
+ <p> {{ user str }} </p> 
+<p> {{ user dex }} </p>
+<p> {{ user int }} </p>
+<p> {{ maxHP }} </p> 
+<p> {{ currentHP }} </p>
+ </div>
+{% else %}
+<div>
+<h1> Please log in to play randaquest </h1>
+</div>
+{% endif %}
+{% endblock %}

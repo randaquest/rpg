@@ -1,27 +1,26 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(User)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
-    level = models.IntegerField(default=1)
-    maxHP = models.IntegerField(default=100)
-    currentHP = models.IntegerField(default=100)
-    strength = models.IntegerField(default=10)
-    dexterity = models.IntegerField(default=10)
-    intelligence = models.IntegerField(default=10)
-    areaID = models.ForeignKey(Area)
-    
-    def __unicode__(self):
-        return self.user.username
-
 class Area(models.Model):
      areaID = models.AutoField(primary_key=True)
      name = models.CharField(max_length=128)
      picture = models.ImageField(upload_to='area_images', blank=True)
      rarity = models.IntegerField(default=1)
      backstory = models.CharField(max_length=128)
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    picture = models.ImageField(upload_to='profile_images', blank=True)
+    level = models.IntegerField(default=1, blank=False)
+    maxHP = models.IntegerField(default=100, blank=False)
+    currentHP = models.IntegerField(default=100, blank=False)
+    strength = models.IntegerField(default=10, blank=False)
+    dexterity = models.IntegerField(default=10, blank=False)
+    intelligence = models.IntegerField(default=10, blank=False)
+    areaID = models.ForeignKey(Area, default=0, blank=False)
+    
+    def __unicode__(self):
+        return self.user.username
      
     
 
@@ -33,7 +32,7 @@ class Monster(models.Model):
     difficulty = models.IntegerField(default=1)
     boss = models.BooleanField(default=False)
     baseXP = models.IntegerField(default=10)
-    areaID = models.ForeignKey(Area)
+    areaID = models.ForeignKey(Area, default=0)
 
     def __unicode__(self):
                 return self.name

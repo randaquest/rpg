@@ -14,7 +14,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ('picture',)
 
-@admin required
+#@admin required
 class MonsterForm(forms.ModelForm):
     #Needs a way to add multiple items.
     areas = Area.objects.all().values('name')
@@ -23,14 +23,14 @@ class MonsterForm(forms.ModelForm):
         model = Monster
         fields = ('name','picture','rarity','difficulty','baseXP','areaID')
 
-@admin required
-class ItemForm(forms.ModelForm):
+#@admin required
+#class ItemForm(forms.ModelForm):
     #Need a way to define type - Weap, Armor or usable
-    class Meta:
-        model = Item
-        fields = ('name','picture','rarity','difficulty','baseXP')
+   # class Meta:
+       # model = Item
+        #fields = ('name','picture','rarity','difficulty','baseXP')
 
-@admin required
+#@admin required
 class AreaForm(forms.ModelForm):
     class Meta:
         model = Area

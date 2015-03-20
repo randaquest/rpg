@@ -1,28 +1,28 @@
-from Maths import random
+import random
 from rpg import models
 
-def isEvent:
+def isEvent():
     if random.randint(1,3) == 3:
         return True
 
-def isDrop:
+def isDrop():
     if random.randint(1,10) == 10:
         return True
     return False
 
-def whichArea:
-    areas = length(Area.objects.all())
+def whichArea():
+    areas = Area.objects.all().count()
     return random.randint(1,areas)
 
-def whichMonster:
-    monsters = length(Monsters.objects.all())
+def whichMonster():
+    monsters = Monsters.objects.all().count()
     return random.randint(1,monsters)
 
-def damage:
+def damage():
     strength = request.user.strength
     damage = random.randint(0.5*strength, strength)
     critical = random.randint(1,20)
-    if critical = 20:
+    if critical == 20:
         damage = 2*damage
     return damage
         
