@@ -98,6 +98,14 @@ def battle(request):
     else:
         return game(request)
 
+
+def inventory(request):
+    u = request.user.userprofile
+    for i in u.inventory:
+        contextDict['items'] : i
+
+    
+
 def death(request):
     try:
         u = request.user.userprofile

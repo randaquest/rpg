@@ -36,6 +36,8 @@ class UserProfile(models.Model):
     level = models.IntegerField(default=1, blank=False)
     maxHP = models.IntegerField(default=100, blank=False)
     currentHP = models.IntegerField(default=100, blank=False)
+    maxMana = models.IntegerField(default=100, blank=False)
+    currentMana = models.IntegerField(default=100, blank=False)
     strength = models.IntegerField(default=10, blank=False)
     dexterity = models.IntegerField(default=10, blank=False)
     intelligence = models.IntegerField(default=10, blank=False)
@@ -44,6 +46,7 @@ class UserProfile(models.Model):
     coordY = models.IntegerField(default=0, blank=False)
     inBattle = models.BooleanField(default=False, blank=False)
     battle = models.ForeignKey(Battle, blank=True, null=True)
+    inventory = models.ManyToManyField(ItemAssignment, blank=True, null=True)
     areaID = models.ForeignKey(Area, blank=True)
     
     def __unicode__(self):
@@ -68,13 +71,11 @@ class Armor(Item):
 class Usable(Item):
     effect = models.IntegerField(default=0)
 
-class ItemTables(models.Model):
-    user = models.ForeignKey(UserProfile)
+class ItemAssignment(models.Model):
     item = models.ForeignKey(Item)
     amount = models.IntegerField(default=0)
 
-class DropTables(models.Model):
-    monster = models.ForeignKey(Monster)
+class DropAssignment(models.Model):
     item = models.ForeignKey(Item)
     rarity = models.IntegerField(default=0)
     
