@@ -1,5 +1,7 @@
 import random
-from rpg import models
+from django.contrib.auth.models import User
+from rpg.models import *
+
 
 def isEvent():
     if random.randint(1,3) == 3:
@@ -14,15 +16,20 @@ def whichArea():
     areas = Area.objects.all().count()
     return random.randint(1,areas)
 
-def whichMonster():
-    monsters = Monsters.objects.all().count()
-    return random.randint(1,monsters)
+def whichMonster(a):
+    monsters = Monster.objects.filter(area=a)
+    index = monsters.count()-1
+    monster = monsters[random.randint(0,index)]
+    return monster
 
-def damage():
-    strength = request.user.strength
-    damage = random.randint(0.5*strength, strength)
+def damage(u):
+    strength = u.strength
+    damage = random.randint(1, strength)
     critical = random.randint(1,20)
     if critical == 20:
         damage = 2*damage
     return damage
+
+def monsterDamage():
+    return 2
         

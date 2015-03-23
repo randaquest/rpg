@@ -13,15 +13,15 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('picture',)
-
+        widgets = {'level': forms.HiddenInput(), 'maxHP': forms.HiddenInput(), 'currentHP': forms.HiddenInput(),
+                   'strength': forms.HiddenInput(), 'intelligence': forms.HiddenInput(), 'experience': forms.HiddenInput(), 'coordX': forms.HiddenInput(),
+                   'coordY': forms.HiddenInput(),'inBattle': forms.HiddenInput(),'battle': forms.HiddenInput(),
+                   'areaID': forms.HiddenInput() }
 #@admin required
 class MonsterForm(forms.ModelForm):
-    #Needs a way to add multiple items.
-    areas = Area.objects.all().values('name')
-    areaID = forms.ChoiceField(choices=areas)
     class Meta:
         model = Monster
-        fields = ('name','picture','rarity','difficulty','baseXP','areaID')
+        fields = ('name','picture','rarity','maxHP','boss','baseXP','area')
 
 #@admin required
 #class ItemForm(forms.ModelForm):
@@ -34,4 +34,4 @@ class MonsterForm(forms.ModelForm):
 class AreaForm(forms.ModelForm):
     class Meta:
         model = Area
-        fields = ('name','picture','rarity')
+        fields = ('name','picture','rarity', 'backstory')

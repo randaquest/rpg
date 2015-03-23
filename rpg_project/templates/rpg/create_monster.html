@@ -1,0 +1,26 @@
+{% extends 'rpg/base.html' %}
+
+{% block body_block %}
+   <h1>Create a monster</h1>
+
+        {% if created %}
+        <strong>Succesfully created monster!</strong><br />
+        <a href="{% url 'index' %}">Return to the homepage.</a><br />
+        {% else %}
+        <strong>Create a monster!</strong><br />
+
+        <form id="monster_form" method="post" action="{% url 'create_monster' %}"
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <!-- Display each form. The as_p method wraps each element in a paragraph
+                 (<p>) element. This ensures each element appears on a new line,
+                 making everything look neater. -->
+            {{ monster_form.as_p }}
+
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Create Monster" />
+        </form>
+        {% endif %}
+{% endblock %}

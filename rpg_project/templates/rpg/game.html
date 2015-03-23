@@ -3,24 +3,45 @@
 
 {% block body_block %}
   {% if user.is_authenticated %}
-<div> 
-<p> {{ area name }} </p>
-<p> {{ area picture }} </p>
-<p> {{ area backstory }} </p>
-</div>
-<div> 
-<p> {{ username }} </p> 
- <p> {{ user picture }} </p> 
- <p> {{ user level }} </p> 
- <p> {{ user str }} </p> 
-<p> {{ user dex }} </p>
-<p> {{ user int }} </p>
-<p> {{ maxHP }} </p> 
-<p> {{ currentHP }} </p>
- </div>
-{% else %}
+
+<style>
+div {
+    background-color: lightgrey;
+    width: 300px;
+    padding: 25px;
+    border: 5px solid navy;
+    margin: 25px;
+    position: relative
+}
+</style>
+
 <div>
-<h1> Please log in to play randaquest </h1>
+<h1>{{ area.name }}</h1>
+<p>{{ area.picture }}</p>
+<p>{{ area.backstory }}</p>
 </div>
+<div> 
+<p>{{ user }}</p> 
+ <p>{{ char.picture }}</p> 
+ <p>Level: {{ char.level }}</p> 
+ <p>Strength: {{ char.strength }}</p> 
+<p> Dexterity: {{ char.dexterity }}</p>
+<p> Intelligence: {{ char.intelligence }}</p>
+<p> Health: {{ char.currentHP }} / {{ char.maxHP }} </p>
+
+</div>
+
+
+        <form action="" method="post">
+{% csrf_token %}
+<input type="submit" name="n" value="North" />
+<input type="submit" name="e" value="East" />
+<input type="submit" name="s" value="South" />
+<input type="submit" name="w" value="West" />
+</form>
+{% else %}
+	<div>
+	<h1> Please log in to play randaquest </h1>
+	</div>
 {% endif %}
 {% endblock %}

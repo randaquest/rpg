@@ -1,0 +1,82 @@
+{% extends 'rpg/base.html' %}
+
+
+{% block body_block %}
+  {% if user.is_authenticated %}
+<style>
+.health-bar {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 200px;
+  height: 20px;
+  padding: 5px;
+  background: #ddd;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  position: relative;
+}
+.bar {
+  background: #c54;
+  width: {{ hp }};
+  height: 10px;
+  position: relative;
+}
+
+.hit {
+  background: rgba(255,255,255,0.6);
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 10px;
+  width: 0px;
+</style>
+  
+  transition: width .3s linear;
+}
+
+<div style="width:100%;border:1px solid gray;padding:8px;">
+<h1 style="text-align:center;text-transform:uppercase;color:#A7C942;">{{ monster.name }}</h1>
+{{ monster.picture }}
+<p style="text-indent:50px;text-align:justify;letter-spacing:3px;">{{ mhp }} / {{ monster.maxHP }}</p>
+</div>
+{% if action %}
+<p> You did {{ damage }} to the monster </p>
+<p> the monster did {{ mdamage }} to you </p>
+{% endif %}
+{% if victory %}
+<p> With a final blow you slay the monster! </p>
+<p> You gain {{ m.baseXP }} </p>
+<p> You dont find items because they aint coded yet </p>
+ <form action="" method="post">
+{% csrf_token %}
+<input type="submit" name="continue" value="Continue" />
+</form>
+{% endif %}
+<div> 
+<p>{{ user }}</p> 
+ <p>{{ char.picture }}</p> 
+ <p>Level: {{ char.level }}</p> 
+ <p>Strength: {{ char.strength }}</p> 
+<p> Dexterity: {{ char.dexterity }}</p>
+<p> Intelligence: {{ char.intelligence }}</p>
+<div class="health-bar" data-total={{ char.maxHP }} data-value={{ char.currentHP }}>
+  <div class="bar">
+  	  <div class="hit"></div>
+  </div>
+</div>
+ </div>
+<p> {{ char.currentHP }} / {{ char.maxHP }} </p>
+
+        <form action="" method="post">
+{% csrf_token %}
+<input type="submit" name="attack" value="Attack" />
+</form>
+{% else %}
+	<div>
+	<h1> Please log in to play randaquest </h1>
+	</div>
+{% endif %}
+{% endblock %}

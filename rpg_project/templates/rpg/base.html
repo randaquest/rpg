@@ -17,6 +17,8 @@
     {% if user.is_authenticated %}
         <li><a href="{% url 'logout' %}">Logout</a></li>
 	<li><a href="{% url 'game' %}">Play</a></li>
+	<li><a href="{% url 'create_monster' %}">Create Monster</a></li>
+        <li><a href="{% url 'create_area' %}">Create Area</a></li>
     {% else %}
         <li><a href="{% url 'register' %}">Register Here</a></li>
         <li><a href="{% url 'login' %}">Login</a></li>
