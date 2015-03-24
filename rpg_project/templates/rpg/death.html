@@ -6,18 +6,13 @@
 
 <div class="container">
   <div class="jumbotron">
-    <h1>{{ area.name }}</h1>
-    <p>{{ area.backstory }}</p> 
+    <h1>Game over</h1> 
+   <p> 'You feel the world slipping away as you fall to the ground breathless... In a flash of white brilliance you are reborn.'
   </div>
 </div>
-
-
         <form action="" method="post" align="center">
 {% csrf_token %}
-<input type="submit" name="n" value="North" />
-<input type="submit" name="e" value="East" />
-<input type="submit" name="s" value="South" />
-<input type="submit" name="w" value="West" />
+<input type="submit" name="continue" value="Continue" />
 </form>
 {% else %}
 	<div class = "container">

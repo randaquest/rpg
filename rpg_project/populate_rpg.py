@@ -10,11 +10,11 @@ from rpg.models import Area, Monster, Item, Weapon, Armor
 def populate():
     add_area('Cat Island','/static/img/Scenario1/catisland.jpg','7','Meow meow, meow mew meow meow meow. Meow meow mew mew meow meow. Meow meow meow! Meowwwww!!!!')
     add_area('Mountains','/static/img/Scenario2/mountains.jpg','3','Candy mountain candy mountain fill me with sweet sugary goodness. Here is mountains.')
-    add_area('City','/static/img/Scenario3/city.jpg','6','You are now in a city! With all the people hustling around, make sure you don’t get run over by the taxis!')
+    add_area('City','/static/img/Scenario3/city.jpg','6','You are now in a city! With all the people hustling around, make sure you do not get run over by the taxis!')
     add_area('Closet','/static/img/Scenario4/closet.jpg','5','This is your closet. The rug is soft beneath your feet. There are about 87 suits for you to pick from.')
     add_area('Forest','/static/img/Scenario5/trees.jpg','4','You are in a forest. There are lots of tall trees and greenery. And animals. Yes.')
     add_area('Space','/static/img/Scenario6/space.jpg','10','Space.')
-    add_area('Desert','/static/img/Scenario7/desert.jpg','6','Is this a mirage?! No, it’s a desert. There’s water over the hill... just kidding. Hope you brought your own.')
+    add_area('Desert','/static/img/Scenario7/desert.jpg','6','Is this a mirage?! No, it is a desert. There is water over the hill... just kidding. Hope you brought your own.')
     add_area('Suburb','/static/img/Scenario8/suburb.jpg','1','This is boring. Get out as soon as you can. Suburbia.')
     add_area('Sea','/static/img/Scenario9/sea.jpg','4','Blub blub blub blub blub blub. You are in an ocean. Hope you can swim!')
     add_area('Tundra','/static/img/Scenario10/ice.jpg','7','This is an arctic tundra. The cold wind whips over your bald head. You turn to the left, turn to the right, snow. That is all.')

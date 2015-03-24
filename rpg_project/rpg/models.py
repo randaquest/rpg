@@ -11,6 +11,22 @@ class Area(models.Model):
      def __unicode__(self):
                 return self.name
 
+class Item(models.Model): # Abstract class defining common attributes of all items
+    itemID = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=128)
+    picture = models.ImageField(upload_to='item_images', blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+class ItemAssignment(models.Model):
+    item = models.ForeignKey(Item)
+    amount = models.IntegerField(default=0)
+
+class DropAssignment(models.Model):
+    item = models.ForeignKey(Item)
+    rarity = models.IntegerField(default=0)
+
 class Monster(models.Model):
     monsterID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128)
@@ -47,19 +63,10 @@ class UserProfile(models.Model):
     inBattle = models.BooleanField(default=False, blank=False)
     battle = models.ForeignKey(Battle, blank=True, null=True)
     inventory = models.ManyToManyField(ItemAssignment, blank=True, null=True)
-    areaID = models.ForeignKey(Area, blank=True)
+    areaID = models.ForeignKey(Area, blank=True, null=True)
     
     def __unicode__(self):
         return self.user.username
-
-
-class Item(models.Model): # Abstract class defining common attributes of all items
-    itemID = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=128)
-    picture = models.ImageField(upload_to='item_images', blank=True)
-
-    def __unicode__(self):
-        return self.name
 
 class Weapon(Item):
     minD = models.IntegerField(default=1)
@@ -70,13 +77,5 @@ class Armor(Item):
 
 class Usable(Item):
     effect = models.IntegerField(default=0)
-
-class ItemAssignment(models.Model):
-    item = models.ForeignKey(Item)
-    amount = models.IntegerField(default=0)
-
-class DropAssignment(models.Model):
-    item = models.ForeignKey(Item)
-    rarity = models.IntegerField(default=0)
     
     

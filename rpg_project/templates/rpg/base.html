@@ -1,45 +1,25 @@
 <!DOCTYPE html>
+{% load staticfiles %}
 
 <html>
     <head>
         <title>RPG - {% block title %}Work in progress!{% endblock %}</title>
-		<link rel = "stylesheet" type="text/css" href="userBars.css" media="screen"/>
-		<link rel = "stylesheet" type="text/css" href="circleProf.css" media="screen"/>
-		$base: #222;
-html, body { width: 100%; height: 100%; }
-body {
-  height: 200vh;
-  background-color: $base;
-  background-image:{{area.picture}};
-  background-attachment: scroll;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    width: 100%; height: 100%;
-    background-image: linear-gradient(0deg,$base 0%,rgba($base, 0) 100%);
-    background-attachment: scroll;
-    background-repeat: no-repeat;
-    background-position: top center;
-    background-size: cover;
-    box-shadow: 0 0 0 999px $base;
-    z-index: -1;
-  }
-}
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+    		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
     </head>
 
     <body>
-        <div>
+        <div class="container">
             {% block body_block %}{% endblock %}
         </div>
-
+<div class="container">
         <hr />
 
-        <div>
-        <ul>
+        <div class="container">
+        <ul class="nav nav-tabs" role="tablist">
     {% if user.is_authenticated %}
         <li><a href="{% url 'logout' %}">Logout</a></li>
 	<li><a href="{% url 'game' %}">Play</a></li>
@@ -50,30 +30,12 @@ body {
         <li><a href="{% url 'login' %}">Login</a></li>
     {% endif %}
     <li><a href="{% url 'index' %}">Home</a></li>
-	
-	<div class="profileImage"></div>
-	
-	<div class="stat-levels">
-  <div class="stat-1 stat-bar">
-    <span class="stat-bar-rating" role="stat-bar" style="width: {{HP}};">80%</span>
-	{{char.currentHP}} / {{char.maxHP}}
-  </div>
-  <div class="stat-2 stat-bar">
-    <span class="stat-bar-rating" role="stat-bar" style="width: {{XP}};">45%</span>
-	{{char.experience}}/100
-  </div>
-  <div class="stat-3 stat-bar">
-    <span class="stat-bar-rating" role="stat-bar" style="width: {{Mana}};">20%</span>
-	{{char.currentMana}}/{{char.maxMana}}
-  </div>
-</div>
+	</ul>
+	</div>
 
 
 
-    
 
-	
-</div>
     </body>
 </html>
 

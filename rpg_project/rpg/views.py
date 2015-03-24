@@ -18,7 +18,11 @@ def game(request):
         return battle(request)
     try:
         a = u.areaID
-        area = Area.objects.get(areaID)
+        if a is not None:
+            area = a
+        else:
+            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
+                area = ar
     except exceptions.ObjectDoesNotExist:
         for ar in Area.objects.filter(areaID=randomNum.whichArea()):
             area = ar
@@ -35,23 +39,25 @@ def game(request):
         elif 'w' in request.POST:
             u.coordX -= 1
         #For now not actually using the coordinates
-        for ar in Area.objects.filter(areaID=randomNum.whichArea()):
-            area = ar
-        request.user.areaID = area
         if randomNum.isEvent():
             m = randomNum.whichMonster(area)
             u.inBattle = True
             u.battle = Battle.objects.create(monster = m, mHP = m.maxHP)
             u.save()
             return battle(request)
+        for ar in Area.objects.filter(areaID=randomNum.whichArea()):
+            area = ar
+        request.user.areaID = area
 
-    request.user.areaID = area
+    u.areaID = area
     u.save()
         
 
 
-
-    contextDict = { 'char' : u,'area' : area }
+    hp = str(u.currentHP*100 / u.maxHP)+'%'
+    mana = str(u.currentMana*100 / u.maxMana)+'%'
+    exp = str(u.experience)+'%'
+    contextDict = { 'char' : u,'area' : area, 'hp' : hp, 'mana' : mana, 'exp' : exp}
     return render(request, 'rpg/game.html', contextDict)
 
 def battle(request):
@@ -81,8 +87,12 @@ def battle(request):
                 u.currentHP -= mdamage
                 damage = randomNum.damage(u)
                 u.battle.mHP -= damage
+                if u.battle.mHP < 0:
+                    u.battle.mHP = 0
+                    
                 #elif 'spell' etc.
                 if u.currentHP <= 0:
+                    u.currentHP = 0
                     u.inBattle = False
                     return death(request)
                 elif u.battle.mHP <= 0:
@@ -92,17 +102,21 @@ def battle(request):
             u.battle.save()
             u.save()
         hp = str(u.currentHP*100 / u.maxHP)+'%'
-        contextDict = { 'char' : u, 'monster' : m, 'victory' : victory, 'action' : action, 'mhp' : u.battle.mHP, 'damage' : damage, 'mdamage' : mdamage, 'hp' : hp }
+        mana = str(u.currentMana*100 / u.maxMana)+'%'
+        exp = str(u.experience)+'%'
+        monhp = str(u.battle.mHP*100 / m.maxHP)+'%'
+        contextDict = { 'char' : u, 'area' : u.areaID, 'monster' : m, 'victory' : victory, 'action' : action, 'mhp' : u.battle.mHP,
+                        'damage' : damage, 'mdamage' : mdamage, 'hp' : hp, 'monhp' : monhp, 'exp' : exp, 'mana' : mana}
             
         return render(request, 'rpg/battle.html', contextDict)
     else:
         return game(request)
 
 
-def inventory(request):
-    u = request.user.userprofile
-    for i in u.inventory:
-        contextDict['items'] : i
+##def inventory(request):
+##    u = request.user.userprofile
+##    for i in u.inventory:
+##        contextDict['items'] : i
 
     
 
@@ -112,12 +126,15 @@ def death(request):
     except exceptions.ObjectDoesNotExist:
         return redirect(reigster)
     u.maxHP = 100
+    u.currentHP = 100
     u.strength = 10
     u.intelligence = 10
     u.dexterity = 10
     u.experience = 0
     u.level = 1
-    return render('You feel the world slipping away as you fall to the ground breathless... Hazy you awake, with nothing but a sliver of life')
+    u.save()
+    contextDict = {'char' : u, 'area' : u.areaID}
+    return render(request, 'rpg/death.html', contextDict)
     
 
 
