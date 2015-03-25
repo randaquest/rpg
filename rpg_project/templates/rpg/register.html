@@ -1,8 +1,9 @@
 {% extends 'rpg/base.html' %}
 
 {% block body_block %}
-   <h1>Register with RandaQuest</h1>
-
+<ul class="list-group">
+  <li class="list-group-item">
+  <h1>Register with RandaQuest</h1>
         {% if registered %}
         <strong>thank you for registering!</strong><br />
         <a href="{% url 'index' %}">Return to the homepage.</a><br />
@@ -23,5 +24,7 @@
             <!-- Provide a button to click to submit the form. -->
             <input type="submit" name="submit" value="Register" />
         </form>
+		</li>
+		</ul>
         {% endif %}
 {% endblock %}
