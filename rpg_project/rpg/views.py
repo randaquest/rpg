@@ -32,12 +32,20 @@ def game(request):
     if request.method == 'POST':
         if 'n' in request.POST:
             u.coordY += 1
+            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
+                area = ar
         elif 'e' in request.POST:
             u.coordX += 1
+            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
+                area = ar
         elif 's' in request.POST:
             u.coordY -= 1
+            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
+                area = ar
         elif 'w' in request.POST:
             u.coordX -= 1
+            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
+                area = ar
         #For now not actually using the coordinates
         if randomNum.isEvent():
             m = randomNum.whichMonster(area)
@@ -45,18 +53,16 @@ def game(request):
             u.battle = Battle.objects.create(monster = m, mHP = m.maxHP)
             u.save()
             return battle(request)
-        for ar in Area.objects.filter(areaID=randomNum.whichArea()):
-            area = ar
-        request.user.areaID = area
+        u.areaID = area
 
     u.areaID = area
     u.save()
         
 
 
-    hp = str(u.currentHP*100 / u.maxHP)+'%'
-    mana = str(u.currentMana*100 / u.maxMana)+'%'
-    exp = str(u.experience)+'%'
+    hp = u.currentHP*100 / u.maxHP
+    mana = u.currentMana*100 / u.maxMana
+    exp = u.experience
     contextDict = { 'char' : u,'area' : area, 'hp' : hp, 'mana' : mana, 'exp' : exp}
     return render(request, 'rpg/game.html', contextDict)
 
@@ -66,24 +72,21 @@ def battle(request):
     except exceptions.ObjectDoesNotExist:
         return redirect(reigster)
 
-    action = False
-    victory = False
-    damage = 0
-    mdamage = 0
     if u.inBattle:
         m = u.battle.monster
+        action = False
+        victory = False
+        damage = 0
+        mdamage = 0
+        drops = randomNum.Drop(m)
+        dropped = False
         if request.method == 'POST':
             if 'continue' in request.POST:
                 u.inBattle = False
-                u.experience += m.baseXP
-                if u.experience > 100:
-                    u.experience -= 100
-                    u.level += 1
-                u.save()
                 return game(request)
             if 'attack' in request.POST:
                 action = True
-                mdamage = randomNum.monsterDamage()
+                mdamage = randomNum.monsterDamage(m,u)
                 u.currentHP -= mdamage
                 damage = randomNum.damage(u)
                 u.battle.mHP -= damage
@@ -96,27 +99,80 @@ def battle(request):
                     u.inBattle = False
                     return death(request)
                 elif u.battle.mHP <= 0:
-                  #if isDrop():
-                      #ItemTables.objects.get_or_create(itemID, u)
+                    u.experience += m.baseXP
+                    if u.experience > 100:
+                        u.experience -= 100
+                        u.level += 1
+                        u.skillpoints += 3
+                    if drops != []:
+                        dropped = True
+                        for i in drops:
+                            u.inventory.add(i)
+                    u.save()
                     victory = True;
             u.battle.save()
             u.save()
-        hp = str(u.currentHP*100 / u.maxHP)+'%'
-        mana = str(u.currentMana*100 / u.maxMana)+'%'
-        exp = str(u.experience)+'%'
+        hp = u.currentHP*100 / u.maxHP
+        mana = u.currentMana*100 / u.maxMana
+        exp = u.experience
         monhp = str(u.battle.mHP*100 / m.maxHP)+'%'
         contextDict = { 'char' : u, 'area' : u.areaID, 'monster' : m, 'victory' : victory, 'action' : action, 'mhp' : u.battle.mHP,
-                        'damage' : damage, 'mdamage' : mdamage, 'hp' : hp, 'monhp' : monhp, 'exp' : exp, 'mana' : mana}
+                        'damage' : damage, 'mdamage' : mdamage, 'hp' : hp, 'monhp' : monhp, 'exp' : exp, 'mana' : mana, 'drops' : drops,
+                        'dropped' : dropped }
             
         return render(request, 'rpg/battle.html', contextDict)
     else:
         return game(request)
 
 
-##def inventory(request):
-##    u = request.user.userprofile
-##    for i in u.inventory:
-##        contextDict['items'] : i
+def inventory(request):
+    u = request.user.userprofile
+    items = u.inventory.all()
+    weapons = []
+    armor = []
+    for i in items:
+        if Weapon.objects.get(i) != null:
+            weapons += [i]
+            i.delete()
+        if Armor.objects.get(i) != null:
+            armor += [i]
+            i.delete()
+    hp = u.currentHP*100 / u.maxHP
+    mana = u.currentMana*100 / u.maxMana
+    exp = u.experience
+    contextDict = { 'char' : u, 'items' : items, 'weapons' : weapons, 'armor' : armor, 'hp' : hp, 'exp' : exp, 'mana' : mana }
+    return render(request, 'rpg/inventory.html', contextDict)
+
+def status(request):
+    u = request.user.userprofile
+    if u.skillpoints > 0:
+        leveled = True
+    else: leveled = False
+
+    if request.method == 'POST':
+            if 'strength' in request.POST:
+                if leveled:
+                    u.strength += 1
+                    u.skillpoints -= 1
+            if 'dexterity'  in request.POST:
+                if leveled:
+                    u.dexterity += 1
+                    u.skillpoints -= 1
+            if 'intelligence'  in request.POST:
+                if leveled:
+                    u.intelligence += 1
+                    u.skillpoints -= 1
+            if u.skillpoints <= 0:
+                        leveled = False
+            u.save()
+    hp = u.currentHP*100 / u.maxHP
+    mana = u.currentMana*100 / u.maxMana
+    exp = u.experience
+    contextDict = { 'char' : u, 'leveled' : leveled, 'hp' : hp, 'exp' : exp, 'mana' : mana }
+    return render(request, 'rpg/status.html', contextDict)
+                    
+    
+
 
     
 
@@ -124,7 +180,7 @@ def death(request):
     try:
         u = request.user.userprofile
     except exceptions.ObjectDoesNotExist:
-        return redirect(reigster)
+        return redirect(register)
     u.maxHP = 100
     u.currentHP = 100
     u.strength = 10
@@ -150,6 +206,8 @@ def create_monster(request):
 
         if monster_form.is_valid():
             monster = monster_form.save()
+            if 'picture' in request.FILES:
+                monster.picture = request.FILES['picture']
             monster.save()
 
             
@@ -180,6 +238,8 @@ def create_area(request):
 
         if area_form.is_valid():
             area = area_form.save()
+            if 'picture' in request.FILES:
+                area.picture = request.FILES['picture']
             area.save()
 
             
@@ -193,6 +253,9 @@ def create_area(request):
 
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     # These forms will be blank, ready for user input.
+
+                # Did the user provide a profile picture?
+            # If so, we need to get it from the input form and put it in the UserProfile model.
     else:
         area_form = AreaForm()
 

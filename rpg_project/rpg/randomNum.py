@@ -7,10 +7,20 @@ def isEvent():
     if random.randint(1,3) == 3:
         return True
 
-def isDrop():
-    if random.randint(1,10) == 10:
-        return True
-    return False
+def Drop(m):
+    drops = []
+##    if m.items.all().count() > 1:
+    for i in m.items.all():
+       dropchance = m.rarity + 100/(i.rarity ** 2)
+       if random.randint(1,100) <= dropchance:
+           drops += [i]
+##    else:
+##        i = Item.objects.get(m.items.all())
+##        dropchance = m.rarity + 100/(i.rarity ** 2)
+##        if random.randint(1,100) <= dropchance:
+##               drops += i
+    return drops
+           
 
 def whichArea():
     areas = Area.objects.all().count()
@@ -30,6 +40,7 @@ def damage(u):
         damage = 2*damage
     return damage
 
-def monsterDamage():
-    return 2
+def monsterDamage(m, u):
+    damage = random.randint(int(0.2*m.strength), m.strength) + int(0.25*u.level)
+    return damage
         

@@ -15,7 +15,7 @@
 <div class="container">
   <div class="jumbotron">
     <h1>{{ monster.name }}</h1>
-   <img src="{{ monster.picture }}" alt={{ monster.name }}/>
+   <img src={{ MEDIA_URL }}{{ monster.picture }} alt={{ monster.name }}/>
 <div class="bar" data-total={{ monster.maxHP }} data-value={{ mhp }}>
   <div class="monhealth-bar">
   </div>
@@ -28,14 +28,13 @@
   <li class="list-group-item">
 <p> You did {{ damage }} to the monster </p>
 <p> the monster did {{ mdamage }} to you </p>
-</li>
 {% endif %}
 {% if victory %}
-<li class="list-group-item">
 <p> With a final blow you slay the monster! </p>
 <p> You gain {{ monster.baseXP }} experience </p>
-<p> You dont find items because they aint coded yet </p>
-</li>
+{% if dropped %}
+<p> The monster dropped: {{ drops }} </p>
+{% endif %}
  <form action="" method="post">
 {% csrf_token %}
 <input type="submit" name="continue" value="Continue" />
@@ -46,6 +45,7 @@
 <input type="submit" name="attack" value="Attack" />
 </form>
 {% endif %}
+</li>
 </ul>
 {% else %}
 	<div>
