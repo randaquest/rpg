@@ -32,6 +32,8 @@ def populate():
     add_monster('Nannerpuss','monster_images/nannerpuss.jpg','6','9','False','10','8', Area.objects.get(name='Sea'))
     add_monster('Slug','monster_images/slug.jpg','7','14','False','13','15', Area.objects.get(name='Tundra'))
     add_monster('Snowman','monster_images/Snowman.jpg','2','3','False','8','7', Area.objects.get(name='Cave'))
+    add_monster('Kraken','monster_images/kraken.jpg','4','9','False','9','11',Area.objects.get(name='Beach'))
+    add_monster('Godzilla','monster_images/Godzilla.jpg','9','12','False','15','4',Area.objects.get(name='Ruins'))
     add_item('Pizza','item_images/pizza.jpg','10')
     add_item('Tampon','item_images/tampon.jpg','1')
     add_item('Rock','item_images/rock.jpg','1')
