@@ -9,16 +9,10 @@ def isEvent():
 
 def Drop(m):
     drops = []
-##    if m.items.all().count() > 1:
     for i in m.items.all():
        dropchance = m.rarity + 100/(i.rarity ** 2)
        if random.randint(1,100) <= dropchance:
            drops += [i]
-##    else:
-##        i = Item.objects.get(m.items.all())
-##        dropchance = m.rarity + 100/(i.rarity ** 2)
-##        if random.randint(1,100) <= dropchance:
-##               drops += i
     return drops
            
 
