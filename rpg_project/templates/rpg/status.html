@@ -1,0 +1,45 @@
+{% extends 'rpg/gamebase.html' %}
+
+
+{% block body_block %}
+ {% if user.is_authenticated %}
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>{{ char }}</h1>
+    <p>Status</p> 
+  </div>
+</div>
+
+<div class="container">
+<form action="" method="post" align="center">
+{% csrf_token %}
+<ul class="list-group">
+<li class="list-group-item">Available skill points: {{ char.skillpoints }} </li>
+<li class="list-group-item">Strength: {{ char.strength }}
+{% if leveled %}
+<input type="submit" name="strength" value="+" />
+{% endif %}</li>
+<li class="list-group-item">Dexterity: {{ char.dexterity }}
+{% if leveled %}
+<input type="submit" name="dexterity" value="+" />
+{% endif %} </li>
+<li class="list-group-item">Intelligence: {{ char.intelligence }}
+{% if leveled %}
+<input type="submit" name="intelligence" value="+" />
+{% endif %} </li>
+</ul>
+</form>
+</div>
+
+
+<form action="{% url 'game' %}" method="post" align="center">
+{% csrf_token %}
+<input type="submit" name="back" value="Back" />
+</form>
+{% else %}
+	<div class = "container">
+	<h1> Please log in to play randaquest </h1>
+	</div>
+{% endif %}
+{% endblock %}

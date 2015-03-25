@@ -1,0 +1,37 @@
+{% extends 'rpg/gamebase.html' %}
+
+
+{% block body_block %}
+ {% if user.is_authenticated %}
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>{{ user }}</h1>
+    <p>Inventory</p> 
+  </div>
+</div>
+
+<div class="container">
+<ul class="list-group">
+{% for i in weapons %}
+<li class="list-group-item"> {{ i }} {{ i.minD }} - {{ i.maxD }}
+<form action="" method="post">
+{% csrf_token %}
+<input type="submit" name="equip" value="Equip" />
+</form>
+</li>
+{% endfor %}
+</ul>
+</div>
+
+
+        <form action="{% url 'game' %}" method="post" align="center">
+{% csrf_token %}
+<input type="submit" name="back" value="Back" />
+</form>
+{% else %}
+	<div class = "container">
+	<h1> Please log in to play randaquest </h1>
+	</div>
+{% endif %}
+{% endblock %}
