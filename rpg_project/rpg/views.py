@@ -30,6 +30,12 @@ def game(request):
         
     
     if request.method == 'POST':
+        if randomNum.isEvent():
+            m = randomNum.whichMonster(area)
+            u.inBattle = True
+            u.battle = Battle.objects.create(monster = m, mHP = m.maxHP)
+            u.save()
+            return battle(request)
         if 'n' in request.POST:
             u.coordY += 1
             for ar in Area.objects.filter(areaID=randomNum.whichArea()):
@@ -47,12 +53,6 @@ def game(request):
             for ar in Area.objects.filter(areaID=randomNum.whichArea()):
                 area = ar
         #For now not actually using the coordinates
-        if randomNum.isEvent():
-            m = randomNum.whichMonster(area)
-            u.inBattle = True
-            u.battle = Battle.objects.create(monster = m, mHP = m.maxHP)
-            u.save()
-            return battle(request)
         u.areaID = area
 
     u.areaID = area
