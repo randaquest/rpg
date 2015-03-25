@@ -128,15 +128,8 @@ def battle(request):
 def inventory(request):
     u = request.user.userprofile
     items = u.inventory.all()
-    weapons = []
-    armor = []
-    for i in items:
-        if Weapon.objects.get(i) != null:
-            weapons += [i]
-            i.delete()
-        if Armor.objects.get(i) != null:
-            armor += [i]
-            i.delete()
+    weapons = Weapon.objects.all()
+    armor = Armor.objects.all()
     hp = u.currentHP*100 / u.maxHP
     mana = u.currentMana*100 / u.maxMana
     exp = u.experience
