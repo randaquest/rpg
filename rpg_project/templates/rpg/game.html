@@ -10,15 +10,18 @@
     <p>{{ area.backstory }}</p> 
   </div>
 </div>
+<div class = "container">
+<div class="col-md-3 col-md-offset-6">
 
-
-        <form action="" method="post" align="center">
+        <form action="" method="post">
 {% csrf_token %}
 <input type="submit" name="n" value="North" />
 <input type="submit" name="e" value="East" />
 <input type="submit" name="s" value="South" />
 <input type="submit" name="w" value="West" />
 </form>
+</div
+</div
 {% else %}
 	<div class = "container">
 	<h1> Please log in to play randaquest </h1>

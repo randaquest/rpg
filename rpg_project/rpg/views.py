@@ -369,3 +369,7 @@ def user_logout(request):
 
     # Take the user back to the homepage.
     return HttpResponseRedirect('/rpg/')
+
+def intro(request):
+    return render(request, 'rpg/intro.html', {})
+
