@@ -32,8 +32,9 @@ def game(request):
     if request.method == 'POST':
         MonstersInArea = Monster.objects.filter(area=area).count()
         if MonstersInArea > 0:
-            if randomNum.isEvent():
-                m = randomNum.whichMonster(area)
+            monsterEncounter = randomNum.isEvent(a)
+            if monsterEncounter[0]:
+                m = monsterEncounter[1]
                 u.inBattle = True
                 u.battle = Battle.objects.create(monster = m, mHP = m.maxHP)
                 u.save()
@@ -78,7 +79,8 @@ def battle(request):
         m = u.battle.monster
         action = False
         victory = False
-        damage = 0
+        hit = True
+        damage = [False, False, 0]
         mdamage = 0
         drops = randomNum.Drop(m)
         dropped = False
@@ -91,7 +93,8 @@ def battle(request):
                 mdamage = randomNum.monsterDamage(m,u)
                 u.currentHP -= mdamage
                 damage = randomNum.damage(u)
-                u.battle.mHP -= damage
+                if damage[0] == False:
+                    u.battle.mHP -= damage[2]
                 if u.battle.mHP < 0:
                     u.battle.mHP = 0
                     
@@ -114,13 +117,15 @@ def battle(request):
                     victory = True;
             u.battle.save()
             u.save()
+        if damage[0]:
+            hit = False
         hp = u.currentHP*100 / u.maxHP
         mana = u.currentMana*100 / u.maxMana
         exp = u.experience
-        monhp = str(u.battle.mHP*100 / m.maxHP)+'%'
+        monhp = u.battle.mHP*100 / m.maxHP
         contextDict = { 'char' : u, 'area' : u.areaID, 'monster' : m, 'victory' : victory, 'action' : action, 'mhp' : u.battle.mHP,
-                        'damage' : damage, 'mdamage' : mdamage, 'hp' : hp, 'monhp' : monhp, 'exp' : exp, 'mana' : mana, 'drops' : drops,
-                        'dropped' : dropped }
+                        'damage' : damage[2], 'crit' : damage[1], 'miss' : damage[0],  'mdamage' : mdamage, 'hp' : hp, 'monhp' : monhp,
+                        'exp' : exp, 'mana' : mana, 'drops' : drops, 'dropped' : dropped, 'hit' : hit }
             
         return render(request, 'rpg/battle.html', contextDict)
     else:
@@ -132,6 +137,15 @@ def inventory(request):
     items = u.inventory.all()
     weapons = Weapon.objects.all()
     armor = Armor.objects.all()
+    if request.method == 'POST':
+        for i in weapons:
+            if i.name in request.POST:
+                u.weapon = i
+                u.save()
+        for i in armor:
+            if i.name in request.POST:
+                u.armor = i
+                u.save()
     hp = u.currentHP*100 / u.maxHP
     mana = u.currentMana*100 / u.maxMana
     exp = u.experience

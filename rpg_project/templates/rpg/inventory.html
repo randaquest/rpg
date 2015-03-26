@@ -13,11 +13,21 @@
 
 <div class="container">
 <ul class="list-group">
+<li class="list-group-item">
+<h1> Equipped: </h1>
+Weapon: {{ char.weapon }}
+Armor: {{ char.armor }}
+</li>
+</ul>
+</div>
+
+<div class="container">
+<ul class="list-group">
 {% for i in weapons %}
 <li class="list-group-item"> {{ i }} {{ i.minD }} - {{ i.maxD }}
 <form action="" method="post">
 {% csrf_token %}
-<input type="submit" name="equip" value="Equip" />
+<input type="submit" name={{i}} value="Equip" />
 </form>
 </li>
 {% endfor %}

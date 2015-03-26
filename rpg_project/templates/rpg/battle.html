@@ -25,26 +25,38 @@
 
 <ul class="list-group">
 {% if action %}
-  <li class="list-group-item">
-<p> You did {{ damage }} to the monster </p>
-<p> the monster did {{ mdamage }} to you </p>
+    <li class="list-group-item">
+	{% if miss %}
+		<p> You missed! </p>
+		<p> the monster did {{ mdamage }} damage to you </p>
+	{% else %}
+		{% if crit %}
+			<p> <strong> Critical!</strong> </p>
+		{% endif %}
+		<p> You did {{ damage }} damage to the monster </p>
+		<p> the monster did {{ mdamage }} damage to you </p>
+	{% endif %}
 {% endif %}
-{% if victory %}
-<p> With a final blow you slay the monster! </p>
-<p> You gain {{ monster.baseXP }} experience </p>
-{% if dropped %}
-<p> The monster dropped: {{ drops }} </p>
-{% endif %}
- <form action="" method="post">
-{% csrf_token %}
-<input type="submit" name="continue" value="Continue" />
-</form>
-{% else %}
-     <form action="" method="post">
-{% csrf_token %}
-<input type="submit" name="attack" value="Attack" />
-</form>
-{% endif %}
+	{% if victory %}
+		<p> With a final blow you slay the monster! </p>
+		<p> You gain {{ monster.baseXP }} experience </p>
+		{% if dropped %}
+		<p> The monster dropped:
+			{% for i in drops %}
+			{{ i }}, 
+			{% endfor %}
+			 </p>
+		{% endif %}
+		<form action="" method="post">
+			{% csrf_token %}
+			<input type="submit" name="continue" value="Continue" />
+		</form>
+	{% else %}
+		<form action="" method="post">
+			{% csrf_token %}
+			<input type="submit" name="attack" value="Attack" />
+		</form>
+	{% endif %}
 </li>
 </ul>
 {% else %}
