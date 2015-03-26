@@ -24,11 +24,23 @@ Armor: {{ char.armor }}
 <div class="container">
 <ul class="list-group">
 {% for i in weapons %}
-<li class="list-group-item"> {{ i }} {{ i.minD }} - {{ i.maxD }}
+<li class="list-group-item"> {{ i }}, Damage: {{ i.minD }} - {{ i.maxD }}
 <form action="" method="post">
 {% csrf_token %}
 <input type="submit" name={{i}} value="Equip" />
 </form>
+</li>
+{% endfor %}
+{% for i in armor %}
+<li class="list-group-item"> {{ i }}, Armor: {{ i.defence }}
+<form action="" method="post">
+{% csrf_token %}
+<input type="submit" name={{i}} value="Equip" />
+</form>
+</li>
+{% endfor %}
+{% for i in items %}
+<li class="list-group-item"> {{ i }}
 </li>
 {% endfor %}
 </ul>

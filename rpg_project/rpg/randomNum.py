@@ -6,50 +6,30 @@ from rpg.models import *
 def isEvent(a):
     monsters = Monster.objects.filter(area=a)   
     for m in monsters:
-        if m == whichMonster(a):
+        monsterchance = 100/(m.rarity + 2)
+        if random.randint(1,100) <= monsterchance:
             return [True, m]
     return [False]
 
 def Drop(m):
     drops = []
     for i in m.items.all():
-       dropchance = m.rarity + 100/(i.rarity ** 2)
+       dropchance = m.rarity + 100/(i.rarity+1)
        if random.randint(1,100) <= dropchance:
            drops += [i]
     return drops
            
 
-def whichArea():
-    areas = Area.objects.all().count()
-    return random.randint(1,areas)
-
-def whichMonster(a):
-    monsters = Monster.objects.filter(area=a)
-    index = monsters.count()-1
-    monster = monsters[random.randint(0,index)]
-    monsterChance = monster.rarity * 10
-    monsterRandomizer = random.randint(10,200)
-    if monsterChance == monsterRandomizer:
-        if monsterRandomizer == 100:
-            return monster
-    elif monsterChance == 90 and monsterRandomizer >= 90:
-        return monster
-    elif monsterChance == 80 and monsterRandomizer >= 80:
-        return monster
-    elif monsterChance == 70 and monsterRandomizer >= 70:
-        return monster
-    elif monsterChance == 60 and monsterRandomizer >= 60:
-        return monster
-    elif monsterChance == 50 and monsterRandomizer >= 50:
-        return monster
-    elif monsterChance == 40 and monsterRandomizer >= 40:
-        return monster
-    elif monsterChance == 30 and monsterRandomizer >= 30:
-        return monster
-    elif monsterChance == 20 and monsterRandomizer >= 20:
-        return monster
-    elif monsterChance == 10 and monsterRandomizer >= 10: # FIX THIS
-        return monster
+def whichArea(u):
+    areas = Area.objects.all()
+    while 1 == 1:
+        for a in areas:
+            chance = a.rarity +2
+            if a == u.areaID and chance > 1:
+                chance -= 1
+            areachance = 100/chance
+            if random.randint(1,100) <= areachance:
+                return a
 
 def damage(u):
     hitchance = 78 + (u.dexterity / 5)

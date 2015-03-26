@@ -21,11 +21,9 @@ def game(request):
         if a is not None:
             area = a
         else:
-            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
-                area = ar
+            area = randomNum.whichArea(u)
     except exceptions.ObjectDoesNotExist:
-        for ar in Area.objects.filter(areaID=randomNum.whichArea()):
-            area = ar
+        area = randomNum.whichArea(u)
 
         
     
@@ -41,28 +39,20 @@ def game(request):
                 return battle(request)
         if 'n' in request.POST:
             u.coordY += 1
-            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
-                area = ar
+            area = randomNum.whichArea(u)
         elif 'e' in request.POST:
             u.coordX += 1
-            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
-                area = ar
+            area = randomNum.whichArea(u)
         elif 's' in request.POST:
             u.coordY -= 1
-            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
-                area = ar
+            area = randomNum.whichArea(u)
         elif 'w' in request.POST:
             u.coordX -= 1
-            for ar in Area.objects.filter(areaID=randomNum.whichArea()):
-                area = ar
+            area = randomNum.whichArea(u)
         #For now not actually using the coordinates
-        u.areaID = area
 
     u.areaID = area
     u.save()
-        
-
-
     hp = u.currentHP*100 / u.maxHP
     mana = u.currentMana*100 / u.maxMana
     exp = u.experience
@@ -135,8 +125,16 @@ def battle(request):
 def inventory(request):
     u = request.user.userprofile
     items = u.inventory.all()
-    weapons = Weapon.objects.all()
-    armor = Armor.objects.all()
+    weapons = []
+    armor = []
+    reitems = []
+    for i in items:
+        if Weapon.objects.get(itemID = i.itemID):
+            weapons += [Weapon.objects.get(itemID = i.itemID)]
+        elif Armor.objects.get(itemID = i.itemID):
+            armor += [Armor.objects.get(itemID = i.itemID)]
+        else:
+            reitems += [i]
     if request.method == 'POST':
         for i in weapons:
             if i.name in request.POST:
@@ -149,7 +147,7 @@ def inventory(request):
     hp = u.currentHP*100 / u.maxHP
     mana = u.currentMana*100 / u.maxMana
     exp = u.experience
-    contextDict = { 'char' : u, 'items' : items, 'weapons' : weapons, 'armor' : armor, 'hp' : hp, 'exp' : exp, 'mana' : mana }
+    contextDict = { 'char' : u, 'items' : reitems, 'weapons' : weapons, 'armor' : armor, 'hp' : hp, 'exp' : exp, 'mana' : mana, 'area' : u.areaID }
     return render(request, 'rpg/inventory.html', contextDict)
 
 def status(request):
@@ -177,7 +175,7 @@ def status(request):
     hp = u.currentHP*100 / u.maxHP
     mana = u.currentMana*100 / u.maxMana
     exp = u.experience
-    contextDict = { 'char' : u, 'leveled' : leveled, 'hp' : hp, 'exp' : exp, 'mana' : mana }
+    contextDict = { 'char' : u, 'leveled' : leveled, 'hp' : hp, 'exp' : exp, 'mana' : mana, 'area' : u.areaID }
     return render(request, 'rpg/status.html', contextDict)
                     
     
