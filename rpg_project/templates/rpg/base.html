@@ -8,30 +8,20 @@
     		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
     		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<script src={{ STATIC_URL }}js/background.js></script>
 <style>
-base: #222;
-html, body { width: 100%; height: 100%; }
-body {
-  height: 200vh;
-  background-color: base;
-  background-image: url(http://miriadna.com/desctopwalls/images/max/Morning-in-forest.jpg);
-  background-attachment: scroll;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    width: 100%; height: 100%;
-    background-image: linear-gradient(0deg,base 0%,rgba(base, 0) 100%);
-    background-attachment: scroll;
-    background-repeat: no-repeat;
-    background-position: top center;
-    background-size: cover;
-    box-shadow: 0 0 0 999px base;
-    z-index: -1;
-  }
+
+.background {
+  background: 
+    url('http://miriadna.com/desctopwalls/images/max/Morning-in-forest.jpg')
+    no-repeat;
+  background-size: 100% auto;
+  position: fixed;
+  width: 100%;
+  height: 300%;
+  top: 0;
+  left: 0;
+  z-index: -1
 }
 
 .bar {
@@ -77,6 +67,8 @@ body {
     </head>
 
     <body>
+<div class="background">
+</div>
         <div class="container">
             {% block body_block %}{% endblock %}
         </div>

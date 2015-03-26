@@ -30,12 +30,14 @@ def game(request):
         
     
     if request.method == 'POST':
-        if randomNum.isEvent():
-            m = randomNum.whichMonster(area)
-            u.inBattle = True
-            u.battle = Battle.objects.create(monster = m, mHP = m.maxHP)
-            u.save()
-            return battle(request)
+        MonstersInArea = Monster.objects.filter(area=area).count()
+        if MonstersInArea > 0:
+            if randomNum.isEvent():
+                m = randomNum.whichMonster(area)
+                u.inBattle = True
+                u.battle = Battle.objects.create(monster = m, mHP = m.maxHP)
+                u.save()
+                return battle(request)
         if 'n' in request.POST:
             u.coordY += 1
             for ar in Area.objects.filter(areaID=randomNum.whichArea()):
@@ -180,8 +182,11 @@ def death(request):
     u.intelligence = 10
     u.dexterity = 10
     u.experience = 0
+    u.skillpoints = 0
     u.level = 1
     u.save()
+    u.coordX = 0
+    u.coordY = 0
     contextDict = {'char' : u, 'area' : u.areaID}
     return render(request, 'rpg/death.html', contextDict)
     
