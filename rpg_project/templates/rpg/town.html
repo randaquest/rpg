@@ -8,7 +8,7 @@
   <div class="jumbotron">
     <h1>{{ area.name }}</h1>
     <p>{{ area.backstory }}</p>
-    <p> {{char.coordX}},{{char.coordY}} </p> 
+    <p> Coordinates: {{char.coordX}},{{char.coordY}} </p> 
   </div>
 </div>
 <div class = "container">
@@ -20,18 +20,20 @@
 <input type="submit" name="s" value="South" />
 <input type="submit" name="w" value="West" />
 </form>
+</br>
 </div
 
 <div class = "container">
+<div class="col-sm-2">
 <form action="" method="post">
 {% csrf_token %}
 <ul class="list-group">
   <li class="list-group-item"><input type="submit" name="rest" value="Rest" /></li>
-  <li class="list-group-item"><input type="submit" name="quest" value="Quests" /></li>
   <li class="list-group-item"><input type="submit" name="shop" value="Shop" /></li>
-  <li class="list-group-item"><input type="submit" name="rumours" value="Rumours" /></li>
+  <li class="list-group-item"><input type="submit" name="highscores" value="Rumours" /></li>
 </ul>
 </form>
+</div>
 </div>
 
 {% else %}

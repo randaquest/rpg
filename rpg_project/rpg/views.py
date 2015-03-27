@@ -140,13 +140,20 @@ def town(request):
             u.save()
         if 'shop' in request.POST:
             return HttpResponseRedirect('/rpg/shop')
-        #if 'highscores' in request.POST:
-            #highscores
+        if 'highscores' in request.POST:
+            return highscores(request)
         #if 'quests' in request.POST:
             #quests
     contextDict = {'area' : a, 'char' : u, 'rested' : rested}
 
     return render(request, 'rpg/town.html', contextDict)
+
+def highscores(request):
+    u = request.user.userprofile
+    a = u.areaID
+    rankings = UserProfile.objects.order_by('-level', '-experience')[:10]
+    contextDict = {'char' : u, 'area' : a, 'ranks' : rankings}
+    return render(request, 'rpg/highscores.html', contextDict)
 
 def shop(request):
     u = request.user.userprofile

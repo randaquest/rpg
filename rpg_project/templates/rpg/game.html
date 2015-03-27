@@ -13,13 +13,14 @@
 </div>
 <div class = "container">
 
-        <form action="" method="post" align="center">
+        <form action="" method="post">
 {% csrf_token %}
 <input type="submit" name="n" value="North" />
 <input type="submit" name="e" value="East" />
 <input type="submit" name="s" value="South" />
 <input type="submit" name="w" value="West" />
 </form>
+</br>
 </div
 {% else %}
 	<div class = "container">

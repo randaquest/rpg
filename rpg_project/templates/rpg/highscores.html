@@ -1,0 +1,56 @@
+{% extends 'rpg/gamebase.html' %}
+
+
+{% block body_block %}
+ {% if user.is_authenticated %}
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>{{ area }} rumour mill</h1>
+    <p>A whisper is just a fact trying to be heard...</p> 
+  </div>
+</div>
+
+
+<div class="container">
+<ul class="list-group">
+  <li class="list-group-item">
+ <table class="table">
+        <thead>
+          <tr>
+            <th>Username</th>
+	    <th>Level </th>
+            <th>Experience</th>
+	    <th>Strength</th>
+	    <th>Dexterity</th>
+	    <th>Intelligence</th>
+          </tr>
+        </thead>
+        <tbody>
+{% for i in ranks %}
+<tr>
+<td>{{ i }}</td>
+<td>{{ i.level }} </td>
+<td>{{ i.experience }}</td>
+<td>{{ i.strength }}</td>
+<td>{{ i.dexterity }}</td>
+<td>{{ i.intelligence }}</td>
+</tr>
+{% endfor %}
+        </tbody>
+      </table>
+</ul>
+</li
+    </div>
+
+
+<form action="{% url 'game' %}" method="post" align="center">
+{% csrf_token %}
+<input type="submit" name="back" value="Back" />
+</form>
+{% else %}
+	<div class = "container">
+	<h1> Please log in to play randaquest </h1>
+	</div>
+{% endif %}
+{% endblock %}
