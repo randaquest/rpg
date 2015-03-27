@@ -53,6 +53,11 @@ def game(request):
 
     u.areaID = area
     u.save()
+    l = Location.objects.filter(areaID=area.areaID)
+    if l.count() > 0:
+        loc = Location.objects.get(areaID=area.areaID)
+        if loc.town:
+            return town(request)
     hp = u.currentHP*100 / u.maxHP
     mana = u.currentMana*100 / u.maxMana
     exp = u.experience
@@ -69,10 +74,10 @@ def battle(request):
         m = u.battle.monster
         action = False
         victory = False
-        hit = True
         damage = [False, False, 0]
         mdamage = 0
         drops = randomNum.Drop(m)
+        gld = randomNum.gold(m)
         dropped = False
         if request.method == 'POST':
             if 'continue' in request.POST:
@@ -94,6 +99,7 @@ def battle(request):
                     u.inBattle = False
                     return death(request)
                 elif u.battle.mHP <= 0:
+                    u.gold += gld
                     u.experience += m.baseXP
                     if u.experience > 100:
                         u.experience -= 100
@@ -107,19 +113,66 @@ def battle(request):
                     victory = True;
             u.battle.save()
             u.save()
-        if damage[0]:
-            hit = False
         hp = u.currentHP*100 / u.maxHP
         mana = u.currentMana*100 / u.maxMana
         exp = u.experience
         monhp = u.battle.mHP*100 / m.maxHP
         contextDict = { 'char' : u, 'area' : u.areaID, 'monster' : m, 'victory' : victory, 'action' : action, 'mhp' : u.battle.mHP,
                         'damage' : damage[2], 'crit' : damage[1], 'miss' : damage[0],  'mdamage' : mdamage, 'hp' : hp, 'monhp' : monhp,
-                        'exp' : exp, 'mana' : mana, 'drops' : drops, 'dropped' : dropped, 'hit' : hit }
+                        'exp' : exp, 'mana' : mana, 'drops' : drops, 'dropped' : dropped, 'gold' : gld }
             
         return render(request, 'rpg/battle.html', contextDict)
     else:
         return game(request)
+
+
+def town(request):
+    u = request.user.userprofile
+    a = u.areaID
+    rested = False
+
+    if request.method == 'POST':
+        if 'rest' in request.POST:
+            rested = True
+            u.currentHP = u.maxHP
+            u.currentMana = u.maxMana
+            u.gold -= 10
+            u.save()
+        if 'shop' in request.POST:
+            return HttpResponseRedirect('/rpg/shop')
+        #if 'highscores' in request.POST:
+            #highscores
+        #if 'quests' in request.POST:
+            #quests
+    contextDict = {'area' : a, 'char' : u, 'rested' : rested}
+
+    return render(request, 'rpg/town.html', contextDict)
+
+def shop(request):
+    u = request.user.userprofile
+    check = Location.objects.filter(coordX=u.coordX, coordY=u.coordY).count()
+    if check == 0:
+        return HttpResponseRedirect('/rpg/game')
+    a = u.areaID
+    lvl = u.level/10
+    purchased = False
+    weaps = Weapon.objects.filter(rarity__lt=(3+lvl))
+    armor = Armor.objects.filter(rarity__lt=(3+lvl))
+    items = Item.objects.all()
+    
+    if request.method == 'POST':
+        for i in items:
+            if i.name in request.POST:
+                if u.gold >= i.rarity*1000:
+                    u.inventory.add(i)
+                    u.gold -= i.rarity*1000
+                    u.save()
+                    purchased = True
+    contextDict = { 'char' : u, 'area' : a, 'weaps' : weaps, 'armor' : armor, 'p' : purchased }
+
+    return render(request, 'rpg/shop.html', contextDict)
+            
+    
 
 
 def inventory(request):
@@ -157,6 +210,16 @@ def status(request):
     else: leveled = False
 
     if request.method == 'POST':
+            if 'health' in request.POST:
+                if leveled:
+                    u.maxHP += 10
+                    u.currentHP += 10
+                    u.skillpoints -= 1
+            if 'mana' in request.POST:
+                if leveled:
+                    u.maxMana += 10
+                    u.currentMana += 10
+                    u.skillpoints -= 1
             if 'strength' in request.POST:
                 if leveled:
                     u.strength += 1
@@ -199,6 +262,7 @@ def death(request):
     u.save()
     u.coordX = 0
     u.coordY = 0
+    u.gold = 0
     contextDict = {'char' : u, 'area' : u.areaID}
     return render(request, 'rpg/death.html', contextDict)
     

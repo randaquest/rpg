@@ -8,12 +8,12 @@
   <div class="jumbotron">
     <h1>{{ area.name }}</h1>
     <p>{{ area.backstory }}</p>
-    <p> Coordinates: {{char.coordX}},{{char.coordY}} </p> 
+    <p> {{char.coordX}},{{char.coordY}} </p> 
   </div>
 </div>
 <div class = "container">
 
-        <form action="" method="post" align="center">
+        <form action="" method="post">
 {% csrf_token %}
 <input type="submit" name="n" value="North" />
 <input type="submit" name="e" value="East" />
@@ -21,6 +21,19 @@
 <input type="submit" name="w" value="West" />
 </form>
 </div
+
+<div class = "container">
+<form action="" method="post">
+{% csrf_token %}
+<ul class="list-group">
+  <li class="list-group-item"><input type="submit" name="rest" value="Rest" /></li>
+  <li class="list-group-item"><input type="submit" name="quest" value="Quests" /></li>
+  <li class="list-group-item"><input type="submit" name="shop" value="Shop" /></li>
+  <li class="list-group-item"><input type="submit" name="rumours" value="Rumours" /></li>
+</ul>
+</form>
+</div>
+
 {% else %}
 	<div class = "container">
 	<h1> Please log in to play randaquest </h1>

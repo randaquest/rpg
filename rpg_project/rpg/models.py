@@ -10,6 +10,11 @@ class Area(models.Model):
 
      def __unicode__(self):
                 return self.name
+               
+class Location(Area):
+     coordX = models.IntegerField(default=0)
+     coordY = models.IntegerField(default=0)
+     town = models.BooleanField(default=True)
 
 class Item(models.Model): # Abstract class defining common attributes of all items
     itemID = models.AutoField(primary_key=True)
@@ -69,6 +74,7 @@ class UserProfile(models.Model):
     experience = models.IntegerField(default=0, blank=False)
     coordX = models.IntegerField(default=0, blank=False)
     coordY = models.IntegerField(default=0, blank=False)
+    gold = models.IntegerField(default=0, blank=False)
     inBattle = models.BooleanField(default=False, blank=False)
     battle = models.ForeignKey(Battle, blank=True, null=True)
     inventory = models.ManyToManyField(Item, blank=True, null=True)

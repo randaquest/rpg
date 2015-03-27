@@ -16,6 +16,14 @@
 {% csrf_token %}
 <ul class="list-group">
 <li class="list-group-item">Available skill points: {{ char.skillpoints }} </li>
+<li class="list-group-item">Health: {{ char.maxHP }}
+{% if leveled %}
+<input type="submit" name="health" value="+" />
+{% endif %}</li>
+<li class="list-group-item">mana: {{ char.maxMana }}
+{% if leveled %}
+<input type="submit" name="mana" value="+" />
+{% endif %}</li>
 <li class="list-group-item">Strength: {{ char.strength }}
 {% if leveled %}
 <input type="submit" name="strength" value="+" />

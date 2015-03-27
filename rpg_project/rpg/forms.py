@@ -16,7 +16,7 @@ class UserProfileForm(forms.ModelForm):
         widgets = {'level': forms.HiddenInput(), 'maxHP': forms.HiddenInput(), 'currentHP': forms.HiddenInput(),
                    'strength': forms.HiddenInput(), 'intelligence': forms.HiddenInput(), 'experience': forms.HiddenInput(), 'coordX': forms.HiddenInput(),
                    'coordY': forms.HiddenInput(),'inBattle': forms.HiddenInput(),'battle': forms.HiddenInput(),
-                   'areaID': forms.HiddenInput(), 'skillpoints': forms.HiddenInput()}
+                   'areaID': forms.HiddenInput(), 'skillpoints': forms.HiddenInput(), 'gold': forms.HiddenInput()}
 #@admin required
 class MonsterForm(forms.ModelForm):
     class Meta:

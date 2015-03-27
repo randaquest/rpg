@@ -15,8 +15,8 @@
 <ul class="list-group">
 <li class="list-group-item">
 <h1> Equipped: </h1>
-Weapon: {{ char.weapon }}
-Armor: {{ char.armor }}
+Weapon: {{ char.weapon }} {% if char.weapon %} <img src={{ MEDIA_URL }}{{ char.weapon.picture }} alt={{ i }} width=50; height=50;> {% endif %} </br>
+Armor: {{ char.armor }}  {% if char.armor %}<img src={{ MEDIA_URL }}{{ char.armor.picture }} alt={{ i }} width=50; height=50;> {% endif %}
 </li>
 </ul>
 </div>
@@ -24,23 +24,23 @@ Armor: {{ char.armor }}
 <div class="container">
 <ul class="list-group">
 {% for i in weapons %}
-<li class="list-group-item"> {{ i }}, Damage: {{ i.minD }} - {{ i.maxD }}
+<li class="list-group-item"><img src={{ MEDIA_URL }}{{ i.picture }} alt={{ i }} width=50; height=50;> {{ i }}, Damage: {{ i.minD }} - {{ i.maxD }}
 <form action="" method="post">
 {% csrf_token %}
-<input type="submit" name={{i}} value="Equip" />
+<input type="submit" name={{i.name}} value="Equip" />
 </form>
 </li>
 {% endfor %}
 {% for i in armor %}
-<li class="list-group-item"> {{ i }}, Armor: {{ i.defence }}
+<li class="list-group-item"><img src={{ MEDIA_URL }}{{ i.picture }} alt={{ i }} width=50; height=50;> {{ i }}, Armor: {{ i.defence }}
 <form action="" method="post">
 {% csrf_token %}
-<input type="submit" name={{i}} value="Equip" />
+<input type="submit" name={{i.name}} value="Equip" />
 </form>
 </li>
 {% endfor %}
 {% for i in items %}
-<li class="list-group-item"> {{ i }}
+<li class="list-group-item"><img src={{ MEDIA_URL }}{{ i.picture }} alt={{ i }} width=50; height=50;> {{ i }}
 </li>
 {% endfor %}
 </ul>

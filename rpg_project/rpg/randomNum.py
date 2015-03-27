@@ -18,12 +18,24 @@ def Drop(m):
        if random.randint(1,100) <= dropchance:
            drops += [i]
     return drops
+
+def gold(m):
+    basegold = m.rarity + m.baseXP
+    return random.randint(1,10)*basegold
            
 
 def whichArea(u):
+    l = Location.objects.filter(coordX=u.coordX, coordY=u.coordY) #All locations with coords the same as our users
+    if l.count() > 0:
+        loc = Location.objects.get(coordX=u.coordX, coordY=u.coordY) #Since the query is non-empty, must have a result to get
+        return Area.objects.get(areaID=loc.areaID) #return the result as an area object
     areas = Area.objects.all()
+    nonlocations = []
+    for a in areas:
+        if Location.objects.filter(areaID=a.areaID).count() == 0: #Inheritance was meaning you could stumble onto static locations
+            nonlocations += [a]                                   # This seperates the areas from static locations
     while 1 == 1:
-        for a in areas:
+        for a in nonlocations:
             chance = a.rarity +2
             if a == u.areaID and chance > 1:
                 chance -= 1
@@ -32,7 +44,7 @@ def whichArea(u):
                 return a
 
 def damage(u):
-    hitchance = 78 + (u.dexterity / 5)
+    hitchance = 78 + (u.dexterity / 5) #78 means 80% hitchance at 10 dex and 98% at 100 dex
     if random.randint(0,100) >= hitchance:
         miss = True
     else:
@@ -54,6 +66,7 @@ def damage(u):
     else:
         crit = False
     return [miss, crit, damage]
+
 
 def monsterDamage(m, u):
     damage = random.randint(int(0.2*m.strength), m.strength) + int(0.25*u.level)

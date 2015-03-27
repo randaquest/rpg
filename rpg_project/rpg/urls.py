@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^status/$', views.status, name='status'),
     url(r'^inventory/$', views.inventory, name='inventory'),
+    url(r'^shop/$', views.shop, name='shop'),
     url(r'^create_monster/$', views.create_monster, name='create_monster'),
     url(r'^create_area/$', views.create_area, name='create_area'),
     )

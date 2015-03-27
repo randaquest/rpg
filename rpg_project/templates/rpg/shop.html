@@ -1,0 +1,46 @@
+{% extends 'rpg/gamebase.html' %}
+
+
+{% block body_block %}
+ {% if user.is_authenticated %}
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>{{ area.name }} Shop</h1>
+    <p>The smell of rusting metal pervades your senses </p>
+  </div>
+</div>
+<div class = "container">
+
+<div class="container">
+<ul class="list-group">
+{% for i in weaps %}
+<li class="list-group-item"><img src={{ MEDIA_URL }}{{ i.picture }} alt={{ i }} width=50; height=50;> {{ i }}, Damage: {{ i.minD }} - {{ i.maxD }}, Price: {{ i.rarity }}000
+<form action="" method="post">
+{% csrf_token %}
+<input type="submit" name={{i.name}} value="Purchase" />
+</form>
+</li>
+{% endfor %}
+{% for i in armor %}
+<li class="list-group-item"><img src={{ MEDIA_URL }}{{ i.picture }} alt={{ i }} width=50; height=50;> {{ i }}, Armor: {{ i.defence }}, Price: {{ i.rarity }}000
+<form action="" method="post">
+{% csrf_token %}
+<input type="submit" name={{i.name}} value="Purchase" />
+</form>
+</li>
+{% endfor %}
+</ul>
+</div>
+
+<form action="{% url 'game' %}" method="post" align="center">
+{% csrf_token %}
+<input type="submit" name="back" value="Back" />
+</form>
+
+{% else %}
+	<div class = "container">
+	<h1> Please log in to play randaquest </h1>
+	</div>
+{% endif %}
+{% endblock %}
