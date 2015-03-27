@@ -21,7 +21,7 @@ class UserProfileForm(forms.ModelForm):
 class MonsterForm(forms.ModelForm):
     class Meta:
         model = Monster
-        fields = ('name','picture','rarity','maxHP','boss','baseXP','area')
+        fields = ('name','picture','rarity','maxHP','strength','boss','baseXP','area')
 
 #@admin required
 #class ItemForm(forms.ModelForm):

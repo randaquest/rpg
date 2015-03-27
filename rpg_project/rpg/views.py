@@ -13,7 +13,7 @@ def game(request):
     try:
         u = request.user.userprofile
     except exceptions.ObjectDoesNotExist:
-        return redirect(register)
+        return HttpResponseRedirect('/rpg/register')
     if u.inBattle:
         return battle(request)
     try:
@@ -30,7 +30,7 @@ def game(request):
     if request.method == 'POST':
         MonstersInArea = Monster.objects.filter(area=area).count()
         if MonstersInArea > 0:
-            monsterEncounter = randomNum.isEvent(a)
+            monsterEncounter = randomNum.isEvent(a,u)
             if monsterEncounter[0]:
                 m = monsterEncounter[1]
                 u.inBattle = True
@@ -68,7 +68,7 @@ def battle(request):
     try:
         u = request.user.userprofile
     except exceptions.ObjectDoesNotExist:
-        return redirect(reigster)
+        return HttpResponseRedirect('/rpg/register')
 
     if u.inBattle:
         m = u.battle.monster
@@ -279,6 +279,9 @@ def index(request):
 
     return render(request, 'rpg/index.html')
 
+def intro(request):
+    return render(request, 'rpg/intro.html')
+
 def create_monster(request):
     created = False
 
@@ -425,7 +428,7 @@ def user_login(request):
                     # If the account is valid and active, we can log the user in.
                     # We'll send the user back to the homepage.
                     login(request, user)
-                    return HttpResponseRedirect('/rpg/')
+                    return HttpResponseRedirect('/rpg/index')
                 else:
                     # An inactive account was used - no logging in!
                     return HttpResponse("Your RPG account is disabled.")
@@ -451,7 +454,7 @@ def user_logout(request):
     logout(request)
 
     # Take the user back to the homepage.
-    return HttpResponseRedirect('/rpg/')
+    return HttpResponseRedirect('/rpg/index')
 
 def intro(request):
     return render(request, 'rpg/intro.html', {})

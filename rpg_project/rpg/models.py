@@ -1,11 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 class Area(models.Model):
      areaID = models.AutoField(primary_key=True)
      name = models.CharField(max_length=128)
      picture = models.ImageField(upload_to='area_images', blank=True)
-     rarity = models.IntegerField(default=1)
+     rarity = models.IntegerField(
+        default=1,
+        validators=[
+            MaxValueValidator(10),
+            MinValueValidator(1)
+        ]
+     )
      backstory = models.CharField(max_length=128)
 
      def __unicode__(self):
@@ -20,7 +28,13 @@ class Item(models.Model): # Abstract class defining common attributes of all ite
     itemID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128)
     picture = models.ImageField(upload_to='item_images', blank=True)
-    rarity = models.IntegerField(default=1)
+    rarity = models.IntegerField(
+        default=1,
+        validators=[
+            MaxValueValidator(10),
+            MinValueValidator(1)
+        ]
+     )
     equippable = models.BooleanField(default=False)
 
     def __unicode__(self):
@@ -40,7 +54,13 @@ class Monster(models.Model):
     monsterID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=128)
     picture = models.ImageField(upload_to='monster_images', blank=True)
-    rarity = models.IntegerField(default=50)
+    rarity = models.IntegerField(
+        default=1,
+        validators=[
+            MaxValueValidator(10),
+            MinValueValidator(1)
+        ]
+     )
     maxHP = models.IntegerField(default=10)
     boss = models.BooleanField(default=False)
     baseXP = models.IntegerField(default=10)

@@ -8,6 +8,8 @@
     		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
     		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" type="text/css"/>
+		<link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+		<link href={{ MEDIA_URL }}css/buttons.css rel='stylesheet' type='text/css'>
 <style>
 html, body {
   width: 100%;
@@ -97,8 +99,14 @@ body:before {
 <div class="exp-bar">
   </div></li>
 <li class="list-group-item">Gold: {{char.gold}}</li>
-<li class="list-group-item"><a href="{% url 'status' %}">Status</a></li>
-<li class="list-group-item"><a href="{% url 'inventory' %}">Inventory</a></li>
+<li class="list-group-item"><form action="{% url 'status' %}" method="post" align="center">
+{% csrf_token %}
+<input type="submit" name="status" value="Status" />
+</form></li>
+<li class="list-group-item"><form action="{% url 'inventory' %}" method="post" align="center">
+{% csrf_token %}
+<input type="submit" name="inventory" value="Inventory" />
+</form></li>
 </div>
 </ul>
 </div>

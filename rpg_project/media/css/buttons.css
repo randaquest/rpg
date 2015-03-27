@@ -1,0 +1,23 @@
+input[type="submit"] {
+    background-color:#D9D9D9;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius:6px;
+    color: black;
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+}
+
+input[type="submit"]:hover {
+background-color: #A9A9A9;
+}
+
+input[type="button"] {
+    background-color: #222;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius:6px;
+    color: white;
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+}

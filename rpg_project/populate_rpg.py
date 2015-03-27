@@ -61,8 +61,9 @@ def populate():
     add_weapon('LightSaber','item_images/LightSaber.jpg','6','9','17')
     add_armor('armorofTesting','picofarmoroftest','3','10')
     add_location('Crestpine Village','area_images/crestpine.jpg','1','The sleepy little village of Crestpine.. what secrets does it hold?','0','0',True)
-    add_location('Barbarica DC','area_images/barbarian.jpg','3','You can smell the stench emanating from the city for miles, the brutal capital of the Barbarians is not for the weak of scent. Legend says that their ruler has not bathed for millenna','45','32',True)    assign()
+    add_location('Barbarica DC','area_images/barbarian.jpg','3','You can smell the stench emanating from the city for miles, the brutal capital of the Barbarians is not for the weak of scent. Legend says that their ruler has not bathed for millenna','45','32',True)
     add_location('Monkeytopia','area_images/Monkeycity.jpg','7','The City of the Monkeys, better known as Dinotopia by the resident dinosaur population','65','65',True)
+    assign()
 def assign():
     for i in Monster.objects.all():
         i.items.add(Weapon.objects.get(name='Pillow'))

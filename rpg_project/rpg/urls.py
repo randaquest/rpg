@@ -2,7 +2,8 @@ from django.conf.urls import patterns, url
 from rpg import views
 
 urlpatterns = patterns('',
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.intro, name='intro'),
+    url(r'^index/$', views.index, name='index'),                   
     url(r'^register/$', views.register, name='register'),
     url(r'^game/$', views.game, name='game'),
     url(r'^login/$', views.user_login, name='login'),

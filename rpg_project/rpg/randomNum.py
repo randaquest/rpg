@@ -3,10 +3,14 @@ from django.contrib.auth.models import User
 from rpg.models import *
 
 
-def isEvent(a):
+def isEvent(a, u):
     monsters = Monster.objects.filter(area=a)   
     for m in monsters:
         monsterchance = 100/(m.rarity + 2)
+        monstrength = m.maxHP + m.strength
+        ustrength = 0.5*(u.maxHP + u.strength)
+        if monstrength > ustrength:
+            monsterchance = 0
         if random.randint(1,100) <= monsterchance:
             return [True, m]
     return [False]
