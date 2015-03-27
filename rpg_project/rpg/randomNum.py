@@ -17,11 +17,18 @@ def isEvent(a, u):
 
 def Drop(m):
     drops = []
+    x = 2
     for i in m.items.all():
-       dropchance = m.rarity + 100/(i.rarity+1)
-       if random.randint(1,100) <= dropchance:
+       dropchance = 100/(i.rarity+x)
+       if random.randint(1,100) < dropchance:
            drops += [i]
+           x += 1
     return drops
+
+def flee():
+    if random.randint(1,2) == 2:
+        return True
+    return False
 
 def gold(m):
     basegold = m.rarity + m.baseXP

@@ -74,11 +74,14 @@ def battle(request):
         m = u.battle.monster
         action = False
         victory = False
+        escape = False
         damage = [False, False, 0]
         mdamage = 0
-        drops = randomNum.Drop(m)
+        drops = []
+        actionable = True
         gld = randomNum.gold(m)
         dropped = False
+        attempt = False
         if request.method == 'POST':
             if 'continue' in request.POST:
                 u.inBattle = False
@@ -92,34 +95,45 @@ def battle(request):
                     u.battle.mHP -= damage[2]
                 if u.battle.mHP < 0:
                     u.battle.mHP = 0
-                    
-                #elif 'spell' etc.
-                if u.currentHP <= 0:
-                    u.currentHP = 0
-                    u.inBattle = False
-                    return death(request)
-                elif u.battle.mHP <= 0:
-                    u.gold += gld
-                    u.experience += m.baseXP
-                    if u.experience > 100:
-                        u.experience -= 100
-                        u.level += 1
-                        u.skillpoints += 3
-                    if drops != []:
-                        dropped = True
-                        for i in drops:
-                            u.inventory.add(i)
-                    u.save()
-                    victory = True;
+            elif 'flee' in request.POST:
+                attempt = True
+                if randomNum.flee():
+                    escape = True;
+                else:
+                    mdamage = randomNum.monsterDamage(m,u)
+                    u.currentHP -= mdamage
+                    escape = False;
+            #elif 'spell' etc.
+            if u.currentHP <= 0:
+                u.currentHP = 0
+                u.inBattle = False
+                return death(request)
+            elif u.battle.mHP <= 0:
+                u.gold += gld
+                u.experience += m.baseXP
+                if u.experience > 100:
+                    u.experience -= 100
+                    u.level += 1
+                    u.skillpoints += 3
+                drops = randomNum.Drop(m)
+                if drops != []:
+                    dropped = True
+                    for i in drops:
+                        u.inventory.add(i)
+                u.save()
+                victory = True;
             u.battle.save()
             u.save()
+        if victory or escape:
+            actionable = False
         hp = u.currentHP*100 / u.maxHP
         mana = u.currentMana*100 / u.maxMana
         exp = u.experience
         monhp = u.battle.mHP*100 / m.maxHP
         contextDict = { 'char' : u, 'area' : u.areaID, 'monster' : m, 'victory' : victory, 'action' : action, 'mhp' : u.battle.mHP,
                         'damage' : damage[2], 'crit' : damage[1], 'miss' : damage[0],  'mdamage' : mdamage, 'hp' : hp, 'monhp' : monhp,
-                        'exp' : exp, 'mana' : mana, 'drops' : drops, 'dropped' : dropped, 'gold' : gld }
+                        'exp' : exp, 'mana' : mana, 'drops' : drops, 'dropped' : dropped, 'gold' : gld, 'escape' : escape, 'actionable' : actionable,
+                        'attempt' : attempt}
             
         return render(request, 'rpg/battle.html', contextDict)
     else:
@@ -144,7 +158,10 @@ def town(request):
             return highscores(request)
         #if 'quests' in request.POST:
             #quests
-    contextDict = {'area' : a, 'char' : u, 'rested' : rested}
+    hp = u.currentHP*100 / u.maxHP
+    mana = u.currentMana*100 / u.maxMana
+    exp = u.experience
+    contextDict = {'area' : a, 'char' : u, 'rested' : rested, 'hp' : hp, 'mana' : mana, 'exp' : exp}
 
     return render(request, 'rpg/town.html', contextDict)
 
@@ -152,7 +169,10 @@ def highscores(request):
     u = request.user.userprofile
     a = u.areaID
     rankings = UserProfile.objects.order_by('-level', '-experience')[:10]
-    contextDict = {'char' : u, 'area' : a, 'ranks' : rankings}
+    hp = u.currentHP*100 / u.maxHP
+    mana = u.currentMana*100 / u.maxMana
+    exp = u.experience
+    contextDict = {'char' : u, 'area' : a, 'ranks' : rankings, 'hp' : hp, 'mana' : mana, 'exp' : exp}
     return render(request, 'rpg/highscores.html', contextDict)
 
 def shop(request):
@@ -163,8 +183,8 @@ def shop(request):
     a = u.areaID
     lvl = u.level/10
     purchased = False
-    weaps = Weapon.objects.filter(rarity__lt=(3+lvl))
-    armor = Armor.objects.filter(rarity__lt=(3+lvl))
+    weaps = Weapon.objects.filter(rarity__lte=(3+lvl))
+    armor = Armor.objects.filter(rarity__lte=(3+lvl))
     items = Item.objects.all()
     
     if request.method == 'POST':
@@ -175,7 +195,11 @@ def shop(request):
                     u.gold -= i.rarity*1000
                     u.save()
                     purchased = True
-    contextDict = { 'char' : u, 'area' : a, 'weaps' : weaps, 'armor' : armor, 'p' : purchased }
+
+    hp = u.currentHP*100 / u.maxHP
+    mana = u.currentMana*100 / u.maxMana
+    exp = u.experience
+    contextDict = { 'char' : u, 'area' : a, 'weaps' : weaps, 'armor' : armor, 'p' : purchased, 'hp' : hp, 'mana' : mana, 'exp' : exp }
 
     return render(request, 'rpg/shop.html', contextDict)
             
@@ -266,10 +290,10 @@ def death(request):
     u.experience = 0
     u.skillpoints = 0
     u.level = 1
-    u.save()
     u.coordX = 0
     u.coordY = 0
     u.gold = 0
+    u.save()
     contextDict = {'char' : u, 'area' : u.areaID}
     return render(request, 'rpg/death.html', contextDict)
     

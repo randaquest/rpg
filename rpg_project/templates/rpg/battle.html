@@ -24,8 +24,20 @@
 </div>
 
 <ul class="list-group">
-{% if action %}
     <li class="list-group-item">
+	{% if attempt %}
+		{% if escape %}
+			<p> You ran away bravely </p>
+ 			<form action="" method="post">
+			{% csrf_token %}
+			<input type="submit" name="continue" value="Continue" />
+			</form>
+		{% else %}
+		<p>You tried to run away and failed</p>
+		<p> the monster did {{ mdamage }} damage to you </p>
+		{% endif %}
+	{% endif %}
+{% if action %}
 	{% if miss %}
 		<p> You missed! </p>
 		<p> the monster did {{ mdamage }} damage to you </p>
@@ -52,10 +64,12 @@
 			{% csrf_token %}
 			<input type="submit" name="continue" value="Continue" />
 		</form>
-	{% else %}
+	{% endif %}
+        {% if actionable %}
 		<form action="" method="post">
 			{% csrf_token %}
 			<input type="submit" name="attack" value="Attack" />
+			<input type="submit" name="flee" value="Flee" />
 		</form>
 	{% endif %}
 </li>

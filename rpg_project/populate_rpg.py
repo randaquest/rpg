@@ -52,14 +52,13 @@ def populate():
     add_item('Pizza','item_images/pizza.jpg','10')
     add_item('Tampon','item_images/tampon.jpg','3')
     add_item('Rock','item_images/rock.jpg','1')
-    add_weapon('FoamSword','item_images/foam.jpg','2','4','14')
+    add_weapon('FoamSword','item_images/foam.jpg','3','4','14')
     add_weapon('Flamethrower','item_images/FlameThrower.jpg','9','25','38')
-    add_weapon('Hammer','item_images/Hammer.jpg','3','9','19')
-    add_weapon('Spork','item_images/spork.jpg','2','9','16')
-    add_weapon('Pillow','item_images/Pillow.jpg','3','6','20')
-    add_weapon('NunChucks','item_images/NunChucks.jpg','8','5','10')
-    add_weapon('LightSaber','item_images/LightSaber.jpg','6','9','17')
-    add_armor('armorofTesting','picofarmoroftest','3','10')
+    add_weapon('Hammer','item_images/Hammer.jpg','4','9','19')
+    add_weapon('Spork','item_images/spork.jpg','3','6','15')
+    add_weapon('Pillow','item_images/Pillow.jpg','5','12','22')
+    add_weapon('NunChucks','item_images/NunChucks.jpg','8','19','25')
+    add_weapon('LightSaber','item_images/LightSaber.jpg','10','30','43')
     add_location('Crestpine Village','area_images/crestpine.jpg','1','The sleepy little village of Crestpine.. what secrets does it hold?','0','0',True)
     add_location('Barbarica DC','area_images/barbarian.jpg','3','You can smell the stench emanating from the city for miles, the brutal capital of the Barbarians is not for the weak of scent. Legend says that their ruler has not bathed for millenna','45','32',True)
     add_location('Monkeytopia','area_images/Monkeycity.jpg','7','The City of the Monkeys, better known as Dinotopia by the resident dinosaur population','65','65',True)
@@ -87,7 +86,7 @@ def add_item(name, picture, rarity):
     return i
 
 def add_weapon(name, picture, rarity, minD, maxD):
-    w = Weapon.objects.get_or_create(name=name, picture=picture, minD=minD, maxD=maxD, equippable=True)[0]
+    w = Weapon.objects.get_or_create(name=name, picture=picture, rarity=rarity, minD=minD, maxD=maxD, equippable=True)[0]
     return w
 
 def add_armor(name, picture, rarity, defence):
